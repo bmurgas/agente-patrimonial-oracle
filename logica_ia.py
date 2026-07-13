@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from langchain_cohere import ChatCohere, CohereEmbeddings
 from langchain_chroma import Chroma
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
 load_dotenv()
 DIRECTORIO_VECTOR = "base_vectorial"
@@ -14,8 +14,6 @@ def buscar_contexto(consulta):
         
     embeddings = CohereEmbeddings(model="embed-multilingual-v3.0")
     vectorstore = Chroma(persist_directory=DIRECTORIO_VECTOR, embedding_function=embeddings)
-    
-    # Busca los 3 fragmentos más relevantes
     resultados = vectorstore.similarity_search(consulta, k=3)
     
     contexto = ""
@@ -24,29 +22,37 @@ def buscar_contexto(consulta):
         
     return contexto
 
-def procesar_consulta(mensaje):
-    """Genera una respuesta usando el contexto de los documentos."""
+def procesar_consulta(mensaje, historial=[]):
+    """Genera una respuesta considerando el historial y los documentos."""
     try:
         llm = ChatCohere(model="command-a-03-2025") 
-        
-        # Primero buscamos en los documentos
         contexto_documentos = buscar_contexto(mensaje)
         
-        # Armamos el "Prompt" (Instrucción) para la IA
-        instruccion = f"""
-        Eres un experto patrimonial y territorial. Responde la consulta del usuario basándote en la siguiente información de los documentos proporcionados.
+        # 1. Creamos la instrucción de sistema base (Instrucciones estrictas y Contexto)
+        instruccion_sistema = f"""
+        Eres un experto patrimonial y territorial. Responde la consulta basándote en la siguiente información de los documentos proporcionados.
         Si la información no está en el contexto, indícalo claramente.
-        Debes incluir la cita inmediatamente después del párrafo donde se haya utilizado la información extraída, y luego añadirla en una bibliografía final. 
+        Debes incluir la cita inmediatamente después del párrafo donde se haya utilizado la información extraída, y luego añadirla en una bibliografía final.
         
         CONTEXTO DE DOCUMENTOS:
         {contexto_documentos}
-        
-        CONSULTA DEL USUARIO: {mensaje}
         """
         
-        mensajes = [HumanMessage(content=instruccion)]
-        respuesta = llm.invoke(mensajes)
+        # 2. Armamos la lista de mensajes empezando por la instrucción de sistema
+        mensajes_langchain = [SystemMessage(content=instruccion_sistema)]
         
+        # 3. Agregamos el historial previo a la memoria del modelo
+        for msg in historial:
+            if msg["role"] == "user":
+                mensajes_langchain.append(HumanMessage(content=msg["content"]))
+            elif msg["role"] == "assistant":
+                mensajes_langchain.append(AIMessage(content=msg["content"]))
+                
+        # 4. Finalmente, agregamos el mensaje actual del usuario
+        mensajes_langchain.append(HumanMessage(content=mensaje))
+        
+        # Generamos la respuesta
+        respuesta = llm.invoke(mensajes_langchain)
         return respuesta.content
     except Exception as e:
         return f"Error al conectar con la IA: {str(e)}"

@@ -21,22 +21,24 @@ def renderizar_sidebar():
         
         if st.button("Procesar Archivos"):
             if archivos_subidos:
-                # Animación de carga mientras procesa y vectoriza
                 with st.spinner("Procesando y vectorizando documentos..."):
-                    # 1. Guardar archivos físicamente
                     rutas = procesamiento.guardar_archivos_localmente(archivos_subidos)
-                    
-                    # 2. Extraer texto y guardar en la base de datos vectorial
                     exito = procesamiento.procesar_y_vectorizar(rutas)
                     
                     if exito:
                         st.success(f"¡Se procesaron y guardaron {len(archivos_subidos)} archivos en la memoria del Agente!")
                     else:
-                        st.error("No se pudo procesar el texto de los documentos. Asegúrate de que sean PDFs válidos y con texto extraíble.")
+                        st.error("No se pudo procesar el texto de los documentos.")
             else:
                 st.warning("Por favor, sube un archivo primero.")
                 
         st.divider()
+        
+        # NUEVO: Botón para reiniciar el chat
+        if st.button("🗑️ Limpiar Conversación"):
+            st.session_state.mensajes = []
+            st.rerun() # Fuerza a recargar la página para limpiar la pantalla
+            
         st.info("Proyecto Final - Infraestructura Oracle Cloud")
 
 def renderizar_chat():
@@ -44,15 +46,28 @@ def renderizar_chat():
     st.title("🏛️ Agente Patrimonial e Inteligencia Territorial")
     st.write("Bienvenido. Este agente te ayudará a analizar normativas y generar información.")
 
+    # 1. INICIALIZAR MEMORIA: Si es la primera vez que entra, creamos la lista vacía
+    if "mensajes" not in st.session_state:
+        st.session_state.mensajes = []
+
+    # 2. DIBUJAR HISTORIAL: Mostramos los mensajes guardados en pantalla
+    for mensaje in st.session_state.mensajes:
+        st.chat_message(mensaje["role"]).write(mensaje["content"])
+
     st.markdown("### Chat de Análisis")
     mensaje_usuario = st.chat_input("Ej: ¿Qué dice la ley 17.288 sobre los hallazgos no previstos?")
 
     if mensaje_usuario:
-        # Mostramos lo que escribió el usuario
+        # Mostramos lo que escribió el usuario ahora
         st.chat_message("user").write(mensaje_usuario)
         
-        # Animación de "pensando" mientras la IA procesa
+        # Animación de "pensando"
         with st.chat_message("assistant"):
             with st.spinner("Buscando en documentos y analizando consulta..."):
-                respuesta_ia = logica_ia.procesar_consulta(mensaje_usuario)
+                # Enviamos el mensaje Y el historial a nuestra lógica
+                respuesta_ia = logica_ia.procesar_consulta(mensaje_usuario, st.session_state.mensajes)
                 st.write(respuesta_ia)
+        
+        # 3. GUARDAR EN MEMORIA: Registramos esta interacción para el futuro
+        st.session_state.mensajes.append({"role": "user", "content": mensaje_usuario})
+        st.session_state.mensajes.append({"role": "assistant", "content": respuesta_ia})
