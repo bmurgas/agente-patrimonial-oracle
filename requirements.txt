@@ -1,0 +1,9 @@
+streamlit
+langchain
+cohere
+langchain-cohere
+faiss-cpu
+pypdf
+geopandas
+folium
+streamlit-folium
