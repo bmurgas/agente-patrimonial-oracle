@@ -1,5 +1,6 @@
 import streamlit as st
-import procesamiento # Conectamos con el motor de datos
+import procesamiento
+import logica_ia 
 
 def configurar_pagina():
     """Configura los parámetros básicos de la página web."""
@@ -10,7 +11,7 @@ def renderizar_sidebar():
     with st.sidebar:
         st.image("https://cdn-icons-png.flaticon.com/512/8200/8200839.png", width=100)
         st.title("Gestión de Datos")
-        st.markdown("Sube aquí las leyes, normativas,etc.")
+        st.markdown("Sube aquí las normativas y shapefiles de la línea base.")
         
         archivos_subidos = st.file_uploader(
             "Subir Archivos (.pdf, .shp, .zip)", 
@@ -20,20 +21,18 @@ def renderizar_sidebar():
         
         if st.button("Procesar Archivos"):
             if archivos_subidos:
-                # Animación de carga mientras procesa
-                with st.spinner("Procesando documentos..."):
+                # Animación de carga mientras procesa y vectoriza
+                with st.spinner("Procesando y vectorizando documentos..."):
                     # 1. Guardar archivos físicamente
                     rutas = procesamiento.guardar_archivos_localmente(archivos_subidos)
                     
-                    # 2. Prueba rápida: Extraer texto del primer archivo (si es PDF)
-                    primer_archivo = rutas[0]
-                    if primer_archivo.endswith('.pdf'):
-                        texto_extraido = procesamiento.extraer_texto_pdf(primer_archivo)
-                        st.success(f"¡Se guardaron {len(archivos_subidos)} archivos con éxito!")
-                        st.text_area("Vista previa del texto extraído:", texto_extraido[:800] + "...", height=200)
+                    # 2. Extraer texto y guardar en la base de datos vectorial
+                    exito = procesamiento.procesar_y_vectorizar(rutas)
+                    
+                    if exito:
+                        st.success(f"¡Se procesaron y guardaron {len(archivos_subidos)} archivos en la memoria del Agente!")
                     else:
-                        st.success(f"¡Se guardaron {len(archivos_subidos)} archivos!")
-                        st.info("Sube un documento PDF para probar la extracción de texto.")
+                        st.error("No se pudo procesar el texto de los documentos. Asegúrate de que sean PDFs válidos y con texto extraíble.")
             else:
                 st.warning("Por favor, sube un archivo primero.")
                 
@@ -49,5 +48,11 @@ def renderizar_chat():
     mensaje_usuario = st.chat_input("Ej: ¿Qué dice la ley 17.288 sobre los hallazgos no previstos?")
 
     if mensaje_usuario:
-        st.write(f"**Tú:** {mensaje_usuario}")
-        st.info("🤖 **Agente:** Conexión con IA pendiente...")
+        # Mostramos lo que escribió el usuario
+        st.chat_message("user").write(mensaje_usuario)
+        
+        # Animación de "pensando" mientras la IA procesa
+        with st.chat_message("assistant"):
+            with st.spinner("Buscando en documentos y analizando consulta..."):
+                respuesta_ia = logica_ia.procesar_consulta(mensaje_usuario)
+                st.write(respuesta_ia)

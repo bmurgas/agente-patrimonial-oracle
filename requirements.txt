@@ -7,3 +7,5 @@ pypdf
 geopandas
 folium
 streamlit-folium
+chromadb
+langchain-chroma
