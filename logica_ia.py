@@ -3,56 +3,108 @@ from dotenv import load_dotenv
 from langchain_cohere import ChatCohere, CohereEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.tools import tool
+from langchain_huggingface import HuggingFaceEmbeddings
+import geo_analisis
 
 load_dotenv()
 DIRECTORIO_VECTOR = "base_vectorial"
 
+@tool
+def herramienta_buscar_monumentos(lat: float, lon: float, radio_km: float = 5.0, tipo_filtro: str = "ambos") -> dict:
+    """
+    Busca sitios patrimoniales cerca de una coordenada.
+    - Usa tipo_filtro="ambos" si el usuario solo dice "monumentos" o no especifica.
+    - Usa tipo_filtro="nacional" si el usuario pide explícitamente "monumentos nacionales".
+    - Usa tipo_filtro="arqueologico" si el usuario pide explícitamente "monumentos arqueológicos" o "sitios arqueológicos".
+    """
+    ruta_excel, ruta_mapa, ruta_kmz, mensaje = geo_analisis.analizar_entorno(lat, lon, radio_km, tipo_filtro)
+    return {"excel": ruta_excel, "mapa": ruta_mapa, "kmz": ruta_kmz, "mensaje": mensaje}
+
 def buscar_contexto(consulta):
-    """Busca fragmentos relevantes en la base vectorial."""
     if not os.path.exists(DIRECTORIO_VECTOR):
         return ""
-        
-    embeddings = CohereEmbeddings(model="embed-multilingual-v3.0")
+    embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
     vectorstore = Chroma(persist_directory=DIRECTORIO_VECTOR, embedding_function=embeddings)
-    resultados = vectorstore.similarity_search(consulta, k=3)
+    
+    # 1. Detectar si la pregunta es teórica/conceptual para Andrea
+    palabras_teoricas = ["qué es", "que es", "qué se entiende", "que se entiende", "define", "definicion", "ley", "normativa", "articulo", "hallazgo"]
+    es_pregunta_teorica = any(palabra in consulta.lower() for palabra in palabras_teoricas)
+    
+    # 2. Búsqueda inteligente: si es teórica, traemos MENOS fragmentos (k=15) pero más precisos. 
+    # Si quisieras filtrar solo PDFs, aquí usarías filter={"source": "ruta_al_pdf"}, 
+    # pero como no sabemos el nombre exacto de tu PDF, usaremos una técnica de "densidad".
+    # Al pedir menos fragmentos (k=15), obligamos al modelo a buscar las coincidencias más densas
+    # de significado (las definiciones) en lugar de repetir 50 filas de Excel vacías.
+    
+    k_busqueda = 15 if es_pregunta_teorica else 30
+    
+    resultados = vectorstore.similarity_search(consulta, k=k_busqueda) 
     
     contexto = ""
     for res in resultados:
-        contexto += res.page_content + "\n\n"
+        # Limpieza brutal de basura visual (esto detiene los bucles <co>)
+        texto_limpio = res.page_content.replace("<co>", "").replace("</co>", "").replace("[", "").replace("]", "")
+        contexto += texto_limpio + "\n\n"
         
     return contexto
 
 def procesar_consulta(mensaje, historial=[]):
-    """Genera una respuesta considerando el historial y los documentos."""
     try:
+        # Usamos el modelo ideal para agentes y RAG
         llm = ChatCohere(model="command-a-03-2025") 
+        llm_con_herramientas = llm.bind_tools([herramienta_buscar_monumentos])
+        
         contexto_documentos = buscar_contexto(mensaje)
         
-        # 1. Creamos la instrucción de sistema base (Instrucciones estrictas y Contexto)
-        instruccion_sistema = f"""
-        Eres un experto patrimonial y territorial. Responde la consulta basándote en la siguiente información de los documentos proporcionados.
-        Si la información no está en el contexto, indícalo claramente.
-        Debes incluir la cita inmediatamente después del párrafo donde se haya utilizado la información extraída, y luego añadirla en una bibliografía final.
+        # Seguro contra vacíos
+        texto_contexto = contexto_documentos if len(contexto_documentos.strip()) > 10 else "No hay información en los documentos cargados."
         
-        CONTEXTO DE DOCUMENTOS:
-        {contexto_documentos}
+        instruccion_sistema = f"""
+        Eres un asistente académico avanzado y experto patrimonial. Tienes plena capacidad para leer textos legales y responder preguntas teóricas de manera detallada.
+
+        CONTEXTO DISPONIBLE (DOCUMENTOS DEL USUARIO):
+        {texto_contexto}
+
+        REGLAS DE COMPORTAMIENTO (CUMPLE ESTRICTAMENTE):
+
+        1. PREGUNTAS TEÓRICAS Y CONCEPTUALES (TU FUNCIÓN PRINCIPAL):
+        - Si el usuario hace una pregunta conceptual como "¿Qué se entiende por monumento arqueológico?", DEBES responder redactando una explicación basada EXCLUSIVAMENTE en el CONTEXTO DISPONIBLE.
+        - ¡TIENES ESTRICTAMENTE PROHIBIDO decir que no puedes responder o que solo buscas coordenadas! 
+        - Formato obligatorio: Parafrasea la información y coloca la cita inmediatamente después del párrafo.
+        - Al final del mensaje, incluye una sección de "Bibliografía" UNA SOLA VEZ (sin bucles infinitos).
+
+        2. PREGUNTAS GEOGRÁFICAS (FUNCIÓN SECUNDARIA):
+        - SOLO si el usuario escribe coordenadas numéricas exactas (ej: -33.45, -70.66), ejecuta la 'herramienta_buscar_monumentos'.
+        - Si el mensaje del usuario NO contiene coordenadas, IGNORA tu herramienta de mapas y concéntrate en la regla 1.
         """
         
-        # 2. Armamos la lista de mensajes empezando por la instrucción de sistema
         mensajes_langchain = [SystemMessage(content=instruccion_sistema)]
         
-        # 3. Agregamos el historial previo a la memoria del modelo
         for msg in historial:
             if msg["role"] == "user":
                 mensajes_langchain.append(HumanMessage(content=msg["content"]))
-            elif msg["role"] == "assistant":
+            elif msg["role"] == "assistant" and msg["tipo"] == "texto":
                 mensajes_langchain.append(AIMessage(content=msg["content"]))
                 
-        # 4. Finalmente, agregamos el mensaje actual del usuario
         mensajes_langchain.append(HumanMessage(content=mensaje))
+        respuesta = llm_con_herramientas.invoke(mensajes_langchain)
         
-        # Generamos la respuesta
-        respuesta = llm.invoke(mensajes_langchain)
-        return respuesta.content
+        if respuesta.tool_calls:
+            for tool_call in respuesta.tool_calls:
+                if tool_call["name"] == "herramienta_buscar_monumentos":
+                    args = tool_call["args"]
+                    resultado = herramienta_buscar_monumentos.invoke(args)
+                    
+                    return {
+                        "tipo": "mapa",
+                        "texto": resultado["mensaje"],
+                        "excel": resultado["excel"],
+                        "mapa": resultado["mapa"],
+                        "kmz": resultado["kmz"]
+                    }
+                    
+        return {"tipo": "texto", "texto": respuesta.content}
+        
     except Exception as e:
-        return f"Error al conectar con la IA: {str(e)}"
+        return {"tipo": "texto", "texto": f"Error al conectar con la IA: {str(e)}"}

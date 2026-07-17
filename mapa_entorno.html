@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_44acd5b6960413fd5f9b1c319c5bd92e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_44acd5b6960413fd5f9b1c319c5bd92e" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_44acd5b6960413fd5f9b1c319c5bd92e = L.map(
+                "map_44acd5b6960413fd5f9b1c319c5bd92e",
+                {
+                    center: [-34.967303417640686, -71.21584702536055],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_fe7e49015b90a8c135290829d8576b76 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_fe7e49015b90a8c135290829d8576b76.addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var marker_57e360465a7950935011a47b61196232 = L.marker(
+                [-34.967303417640686, -71.21584702536055],
+                {
+}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var icon_89dbe08daaae5d99d19a69c3becc7737 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "star",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3dccc59390e31614fc21a314cdbeb68b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_134962c35cad454a0a086ecfb4e81d50 = $(`<div id="html_134962c35cad454a0a086ecfb4e81d50" style="width: 100.0%; height: 100.0%;"><b>PUNTO CENTRAL</b></div>`)[0];
+                popup_3dccc59390e31614fc21a314cdbeb68b.setContent(html_134962c35cad454a0a086ecfb4e81d50);
+            
+        
+
+        marker_57e360465a7950935011a47b61196232.bindPopup(popup_3dccc59390e31614fc21a314cdbeb68b)
+        ;
+
+        
+    
+    
+                marker_57e360465a7950935011a47b61196232.setIcon(icon_89dbe08daaae5d99d19a69c3becc7737);
+            
+    
+            var circle_49659bd0bcfd7d8b37b72b8b908bbfef = L.circle(
+                [-34.967303417640686, -71.21584702536055],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "white", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 30000.0, "stroke": true, "weight": 2}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var marker_3bf1825bbc9405a1437bc91c53f5ecd6 = L.marker(
+                [-34.98539306, -71.23896409],
+                {
+}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var icon_aa35f3184a9f73fb8df8760b4447ae77 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_057240cb3b4a4354de5a3f4c613423e5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ccf0218e5017c0eb709bd770eef6b47d = $(`<div id="html_ccf0218e5017c0eb709bd770eef6b47d" style="width: 100.0%; height: 100.0%;"><b>Kiosco Cívico de la Plaza de Armas de Curicó</b><br>Nacional</div>`)[0];
+                popup_057240cb3b4a4354de5a3f4c613423e5.setContent(html_ccf0218e5017c0eb709bd770eef6b47d);
+            
+        
+
+        marker_3bf1825bbc9405a1437bc91c53f5ecd6.bindPopup(popup_057240cb3b4a4354de5a3f4c613423e5)
+        ;
+
+        
+    
+    
+                marker_3bf1825bbc9405a1437bc91c53f5ecd6.setIcon(icon_aa35f3184a9f73fb8df8760b4447ae77);
+            
+    
+            var marker_39f3de6832b9cf5a508d78a376e631e4 = L.marker(
+                [-34.98658936, -71.23056026],
+                {
+}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var icon_42b947b1a92135bc9a58114e5096506c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a2b9c2a03fb23f22c401f79a34946aa1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_789a138bfdfbcabc3d8a7ac2ffc5c252 = $(`<div id="html_789a138bfdfbcabc3d8a7ac2ffc5c252" style="width: 100.0%; height: 100.0%;"><b>Iglesia de San Francisco de Curicó</b><br>Nacional</div>`)[0];
+                popup_a2b9c2a03fb23f22c401f79a34946aa1.setContent(html_789a138bfdfbcabc3d8a7ac2ffc5c252);
+            
+        
+
+        marker_39f3de6832b9cf5a508d78a376e631e4.bindPopup(popup_a2b9c2a03fb23f22c401f79a34946aa1)
+        ;
+
+        
+    
+    
+                marker_39f3de6832b9cf5a508d78a376e631e4.setIcon(icon_42b947b1a92135bc9a58114e5096506c);
+            
+    
+            var marker_88cafee29c2b8333fd4d047d9ac75948 = L.marker(
+                [-34.9848217, -71.24455373],
+                {
+}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var icon_e57a59cc27ab6b51a398cd1aa67ca011 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cd140d88fa327c957e73eb11bcdbc34f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4047f82ce2a92c7c2dc5f033a9756d94 = $(`<div id="html_4047f82ce2a92c7c2dc5f033a9756d94" style="width: 100.0%; height: 100.0%;"><b>Escuela Presidente José Manuel Balmaceda (D-2)</b><br>Nacional</div>`)[0];
+                popup_cd140d88fa327c957e73eb11bcdbc34f.setContent(html_4047f82ce2a92c7c2dc5f033a9756d94);
+            
+        
+
+        marker_88cafee29c2b8333fd4d047d9ac75948.bindPopup(popup_cd140d88fa327c957e73eb11bcdbc34f)
+        ;
+
+        
+    
+    
+                marker_88cafee29c2b8333fd4d047d9ac75948.setIcon(icon_e57a59cc27ab6b51a398cd1aa67ca011);
+            
+    
+            var marker_8b4fee90cf026f7ef982ec448863ca25 = L.marker(
+                [-34.98539466, -71.23952594000001],
+                {
+}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var icon_4dd9f7b015ac9a4d0bed2488dd689441 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e50cc99bee395da8d3857e2cb7575711 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d19c77c52742ef9f19aa3800b4df216c = $(`<div id="html_d19c77c52742ef9f19aa3800b4df216c" style="width: 100.0%; height: 100.0%;"><b>Plaza de Armas de Curicó</b><br>Nacional</div>`)[0];
+                popup_e50cc99bee395da8d3857e2cb7575711.setContent(html_d19c77c52742ef9f19aa3800b4df216c);
+            
+        
+
+        marker_8b4fee90cf026f7ef982ec448863ca25.bindPopup(popup_e50cc99bee395da8d3857e2cb7575711)
+        ;
+
+        
+    
+    
+                marker_8b4fee90cf026f7ef982ec448863ca25.setIcon(icon_4dd9f7b015ac9a4d0bed2488dd689441);
+            
+    
+            var marker_25e68344bbe088cdc4b4f90b3f7e55fa = L.marker(
+                [-34.98453374, -71.23994464],
+                {
+}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var icon_a8bf200836c4c6ba7605b9eed2610855 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_81379704d7087740e654f05215544c4f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6dc4702bf6918c05805f1ca65f1be37f = $(`<div id="html_6dc4702bf6918c05805f1ca65f1be37f" style="width: 100.0%; height: 100.0%;"><b>Teatro Victoria</b><br>Nacional</div>`)[0];
+                popup_81379704d7087740e654f05215544c4f.setContent(html_6dc4702bf6918c05805f1ca65f1be37f);
+            
+        
+
+        marker_25e68344bbe088cdc4b4f90b3f7e55fa.bindPopup(popup_81379704d7087740e654f05215544c4f)
+        ;
+
+        
+    
+    
+                marker_25e68344bbe088cdc4b4f90b3f7e55fa.setIcon(icon_a8bf200836c4c6ba7605b9eed2610855);
+            
+    
+            var marker_c0d55cd3977b1b0e24b596fc9e5b2a9a = L.marker(
+                [-34.87093983, -71.15883859],
+                {
+}
+            ).addTo(map_44acd5b6960413fd5f9b1c319c5bd92e);
+        
+    
+            var icon_31bc047e0569acc9348b0d35ee85d64d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_eb9fa63c8f82210e5523d5f97d8aeaad = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5a4bebac6347986a9050949bc4077e80 = $(`<div id="html_5a4bebac6347986a9050949bc4077e80" style="width: 100.0%; height: 100.0%;"><b>Estación de Teno</b><br>Nacional</div>`)[0];
+                popup_eb9fa63c8f82210e5523d5f97d8aeaad.setContent(html_5a4bebac6347986a9050949bc4077e80);
+            
+        
+
+        marker_c0d55cd3977b1b0e24b596fc9e5b2a9a.bindPopup(popup_eb9fa63c8f82210e5523d5f97d8aeaad)
+        ;
+
+        
+    
+    
+                marker_c0d55cd3977b1b0e24b596fc9e5b2a9a.setIcon(icon_31bc047e0569acc9348b0d35ee85d64d);
+            
+</script>
+</html>

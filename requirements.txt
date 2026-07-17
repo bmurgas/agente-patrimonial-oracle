@@ -9,3 +9,11 @@ folium
 streamlit-folium
 chromadb
 langchain-chroma
+openpyxl
+xlrd
+pyproj
+fiona
+langchain-community
+sentence-transformers
+torchvision
+langchain-huggingface
