@@ -51,8 +51,11 @@ def procesar_y_vectorizar(rutas):
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         textos_divididos = text_splitter.split_documents(documentos)
 
-        # LA MAGIA: Usamos un modelo local multi-idioma (Cero costo de API)
-        embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
+        # LA MAGIA: Usamos un modelo local multi-idioma con límite de memoria (batch_size)
+        embeddings = HuggingFaceEmbeddings(
+            model_name="paraphrase-multilingual-MiniLM-L12-v2",
+            encode_kwargs={'batch_size': 4}
+        )
         
         Chroma.from_documents(
             documents=textos_divididos,
