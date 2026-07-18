@@ -31,28 +31,23 @@ def procesar_y_vectorizar(rutas):
                 loader = PyPDFLoader(ruta)
                 documentos.extend(loader.load())
                 
-            # 2. PROCESAR EXCEL (Ahora seguro y sin límites de API)
+            # 2. PROCESAR EXCEL (Optimizado para precisión vectorial - 1 fila = 1 documento)
             elif ext in ['.xls', '.xlsx']:
                 df = pd.read_excel(ruta)
-                texto_bloque = ""
                 
                 for index, row in df.iterrows():
+                    # Transformamos cada fila en una ficha descriptiva individual
                     fila_str = " | ".join([f"{col}: {val}" for col, val in row.items() if pd.notna(val)])
-                    texto_bloque += fila_str + "\n"
                     
-                    # Agrupamos de a 10 filas para dar un buen contexto
-                    if (index + 1) % 10 == 0:
-                        doc = Document(page_content=texto_bloque, metadata={"source": nombre_archivo})
+                    # Evitamos agregar filas completamente vacías
+                    if fila_str.strip():
+                        doc = Document(page_content=fila_str, metadata={"source": nombre_archivo})
                         documentos.append(doc)
-                        texto_bloque = "" 
-                
-                if texto_bloque:
-                    doc = Document(page_content=texto_bloque, metadata={"source": nombre_archivo})
-                    documentos.append(doc)
 
         if not documentos:
             return False
 
+        # Dividimos los textos largos (los del PDF, ya que las filas de Excel rara vez superan los 1000 caracteres)
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         textos_divididos = text_splitter.split_documents(documentos)
 
