@@ -1,6 +1,7 @@
 # 🏛️ Agente Patrimonial e Inteligencia Territorial
 
 Acceso: http://132.145.202.67:8501
+Link video funcionamiento: https://youtu.be/D3iZcb1dFQo
 
 ¡Bienvenido al repositorio del **Agente Patrimonial AI**! Este proyecto es un asistente conversacional avanzado, diseñado específicamente para facilitar la labor de revisión, edición y consulta de informes patrimoniales y arqueológicos.
 
