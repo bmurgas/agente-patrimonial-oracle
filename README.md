@@ -110,9 +110,11 @@ Puedes acceder a la plataforma en el siguiente enlace:
 Una vez que la aplicación esté corriendo, el flujo de trabajo es el siguiente:
 
 1.  **Cargar Conocimiento:** En el panel lateral, sube tus normativas (PDF) y tu base de datos de monumentos (Excel). Haz clic en "Procesar Archivos".
-2.  **Consultas Teóricas y de Registros:** Pregunta directamente al chat. Aquí tienes un ejemplo de cómo interactúa:
+2.  **Consultas Teóricas y de Registros:** Pregunta directamente al chat. Aquí tienes dos ejemplo de cómo interactúa:
     *   **Pregunta:** *"¿Qué información tenemos del Torreón Los Canelos?"*
     *   **Respuesta del Agente:** *"Según la información disponible, el Torreón Los Canelos es un Monumento Histórico (Código: 00004_MH_14101) ubicado en la Región de Los Ríos, comuna de Valdivia. Fue decretado mediante el Decreto Supremo N° 744 el 24 de marzo de 1926."*
+    *   **Pregunta:** *"¿que hacer en caso de que se hallará un esqueleto humano en una faena minera?"*
+    *   **Respuesta del Agente:** *"En caso de encontrar un esqueleto humano en una faena minera, se debe seguir el procedimiento establecido en el Artículo 26° de la Ley 20021, que indica:"*
 3.  **Análisis Territorial:** Para que la IA genere mapas, **debes incluir coordenadas numéricas**.
     *   **Pregunta:** *"Busca monumentos a 5km de la coordenada -33.45, -70.66"*
     *   **Respuesta del Agente:** *(Generará un mapa interactivo en pantalla, un archivo KMZ para Google Earth y una tabla Excel con los resultados espaciales listos para descargar).*
