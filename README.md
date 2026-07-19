@@ -1,5 +1,7 @@
 # 🏛️ Agente Patrimonial e Inteligencia Territorial
 
+Acceso: http://132.145.202.67:8501
+
 ¡Bienvenido al repositorio del **Agente Patrimonial AI**! Este proyecto es un asistente conversacional avanzado, diseñado específicamente para facilitar la labor de revisión, edición y consulta de informes patrimoniales y arqueológicos.
 
 A través del uso de Inteligencia Artificial (LLMs) y análisis espacial (GIS), esta herramienta permite "conversar" con normativas legales (PDFs) y bases de datos de monumentos (Excel), garantizando respuestas con rigor académico y visualizaciones geográficas precisas.
@@ -96,19 +98,24 @@ python -m streamlit run app.py
 
 ---
 
+## 🌐 Aplicación en Vivo (Deploy en OCI)
+El proyecto se encuentra desplegado y funcionando en Oracle Cloud Infrastructure (OCI). 
+Puedes acceder a la plataforma en el siguiente enlace: 
+👉 **[http://132.145.202.67:8501](http://132.145.202.67:8501)** .
+
+---
+
 ## 💡 Cómo Utilizar el Agente
 
-Una vez que la aplicación esté corriendo (usualmente en `http://localhost:8501`), el flujo de trabajo es el siguiente:
+Una vez que la aplicación esté corriendo, el flujo de trabajo es el siguiente:
 
-1. **Cargar Conocimiento:** En el panel lateral, sube tus normativas (PDF) y tu base de datos de monumentos (Excel). Haz clic en "Procesar Archivos".
-2. **Consultas Teóricas:** Pregunta directamente.
-* *Ejemplo:* *"¿Qué se entiende por monumento arqueológico según la normativa?"*
-* *Ejemplo:* *"¿Qué información tenemos del Torreón Los Canelos?"*
-
-
-3. **Análisis Territorial:** Para que la IA genere mapas, **debes incluir coordenadas numéricas**.
-* *Ejemplo:* *"Busca monumentos arqueológicos a 5km de la coordenada -33.45, -70.66"*
-
+1.  **Cargar Conocimiento:** En el panel lateral, sube tus normativas (PDF) y tu base de datos de monumentos (Excel). Haz clic en "Procesar Archivos".
+2.  **Consultas Teóricas y de Registros:** Pregunta directamente al chat. Aquí tienes un ejemplo de cómo interactúa:
+    *   **Pregunta:** *"¿Qué información tenemos del Torreón Los Canelos?"*
+    *   **Respuesta del Agente:** *"Según la información disponible, el Torreón Los Canelos es un Monumento Histórico (Código: 00004_MH_14101) ubicado en la Región de Los Ríos, comuna de Valdivia. Fue decretado mediante el Decreto Supremo N° 744 el 24 de marzo de 1926."*
+3.  **Análisis Territorial:** Para que la IA genere mapas, **debes incluir coordenadas numéricas**.
+    *   **Pregunta:** *"Busca monumentos a 5km de la coordenada -33.45, -70.66"*
+    *   **Respuesta del Agente:** *(Generará un mapa interactivo en pantalla, un archivo KMZ para Google Earth y una tabla Excel con los resultados espaciales listos para descargar).*
 
 
 ### Notas sobre los Datos Maestros
